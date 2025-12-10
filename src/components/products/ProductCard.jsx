@@ -9,8 +9,6 @@
 
     const handleAddToCart = () => {
         addToCart(product, 1);
-        // Te lleva directamente al carrito como pediste
-        //navigate("/carrito");
     };
 
     return (

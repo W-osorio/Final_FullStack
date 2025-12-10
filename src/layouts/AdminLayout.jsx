@@ -18,7 +18,7 @@ export const AdminLayout = () => {
       </main>
 
       <footer className="bg-secondary text-white text-center py-2">
-        <small>Admin · MiTienda</small>
+        <small>Admin/Level-Up</small>
       </footer>
     </div>
   );

@@ -1,6 +1,8 @@
+// src/pages/public/LoginPage.jsx
 import { useState } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { authService } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 
 export const LoginPage = () => {
@@ -8,53 +10,61 @@ export const LoginPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
 
-    const from = location.state?.from || "/";
+    const handleChange = (e) => {
+        setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+        });
+    };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-        // login puede lanzar error si las credenciales son inválidas
-        login(email, password);
+        const user = await authService.login(formData);
 
-        // ✅ Swal de éxito
+        // Guardar usuaro 
+        login(user);
+
         Swal.fire({
-            title: "Good job!",
-            text: "Has iniciado sesión correctamente",
             icon: "success",
+            title: "Bienvenido",
+            text: `Hola ${user.nombre || "usuario"} :)`,
         });
 
+        const from = location.state?.from || "/";
         navigate(from, { replace: true });
-        } catch (err) {
-        // ❌ Swal de error
+        } catch (error) {
+        console.error(error);
         Swal.fire({
             icon: "error",
-            title: "Oops...",
-            text: err.message || "Something went wrong!",
+            title: "Credenciales inválidas",
+            text: error.message || "Revisa tu correo y contraseña.",
         });
         }
     };
 
     return (
-        <div className="row justify-content-center mt-5">
-        <div className="col-md-5">
-            <h1 className="mb-4">Iniciar sesión</h1>
+        <div className="container py-5 d-flex justify-content-center">
+        <div
+            className="card shadow p-4"
+            style={{ maxWidth: "450px", width: "100%" }}
+        >
+            <h2 className="mb-4 text-center">Iniciar sesión</h2>
 
-            <div className="alert alert-info small">
-            <strong>Admin demo:</strong> admin@tienda.com / Admin123
-            </div>
-
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit}>
             <div className="mb-3">
-                <label className="form-label">Correo electrónico</label>
+                <label className="form-label">Correo</label>
                 <input
                 type="email"
+                name="email"
                 className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
                 required
                 />
             </div>
@@ -63,11 +73,11 @@ export const LoginPage = () => {
                 <label className="form-label">Contraseña</label>
                 <input
                 type="password"
+                name="password"
                 className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
                 required
-                minLength={4}
                 />
             </div>
 
@@ -76,10 +86,18 @@ export const LoginPage = () => {
             </button>
             </form>
 
-            <p className="mt-3 small">
-            ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
+            <div className="alert alert-info mt-4">
+            <h6 className="mb-2">Credenciales de prueba</h6>
+            <p className="mb-1">
+                <strong>Admin:</strong>
+                <br />
+                Email: <code>admin@tiendagamer.com</code>
+                <br />
+                Password: <code>admin123</code>
             </p>
+            </div>
+
         </div>
         </div>
     );
-    };
+};

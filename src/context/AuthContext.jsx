@@ -1,38 +1,30 @@
 // src/context/AuthContext.jsx
 import { createContext, useContext, useState } from "react";
-import { authService } from "../services/authService.js";
 
+export const AuthContext = createContext();
 
-
-const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(authService.getCurrentUser());
-
-  const login = (email, password) => {
-    const loggedUser = authService.login(email, password);
-    setUser(loggedUser);
-    return loggedUser;
-  };
-
-  const register = (data) => {
-    const newUser = authService.register(data);
-    setUser(newUser);
-    return newUser;
-  };
-
-  const logout = () => {
-    authService.logout();
-    setUser(null);
-  };
+  const [user, setUser] = useState(
+    () => JSON.parse(localStorage.getItem("user")) || null
+  );
 
   const isAdmin = user?.rol === "ADMIN";
 
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAdmin, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAdmin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

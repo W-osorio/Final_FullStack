@@ -8,7 +8,7 @@ export const HomePage = () => {
   return (
     <div>
       <section className="text-center mb-4">
-        <h1 className="mb-3">Bienvenido a MiTienda Gamer 🎮</h1>
+        <h1 className="mb-3">Bienvenido a Level-UP Gamer</h1>
         <p className="lead">
           Descubre los mejores juegos y accesorios para gamers.
         </p>

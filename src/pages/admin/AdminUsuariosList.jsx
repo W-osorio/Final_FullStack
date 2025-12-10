@@ -1,29 +1,32 @@
+// src/pages/admin/AdminUsuariosList.jsx
 import { useEffect, useState } from "react";
 import { authService } from "../../services/authService";
-
-
-
-// admin@tienda.com / Admin123
-
-
 
 export const AdminUsuariosList = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    const data = authService.getUsers();
-    setUsuarios(data);
+    const cargarUsuarios = async () => {
+      try {
+        const data = await authService.getUsers();
+        setUsuarios(data);
+      } catch (error) {
+        console.error("Error al cargar usuarios", error);
+      }
+    };
+
+    cargarUsuarios();
   }, []);
 
   return (
-    <div>
-      <h1 className="mb-4">Usuarios registrados</h1>
-      <table className="table table-striped table-hover">
+    <div className="container py-4">
+      <h2>Usuarios registrados</h2>
+      <table className="table table-striped mt-3">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Email</th>
+            <th>Correo</th>
             <th>Rol</th>
           </tr>
         </thead>

@@ -7,7 +7,7 @@ async function handleResponse(response) {
         const text = await response.text();
         throw new Error(text || `Error HTTP ${response.status}`);
     }
-    // Si no hay contenido (DELETE, por ejemplo)
+    // Si no hay contenido
     if (response.status === 204) return null;
     return response.json();
     }

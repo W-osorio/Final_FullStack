@@ -1,91 +1,72 @@
+// src/pages/public/RegisterPage.jsx
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../../services/authService";
 import Swal from "sweetalert2";
-import { useAuth } from "../../context/AuthContext";
 
 export const RegisterPage = () => {
-    const { register } = useAuth();
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        nombre: "",
+        email: "",
+        password: "",
+    });
 
-    const [nombre, setNombre] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [password2, setPassword2] = useState("");
+    const handleChange = (e) => {
+        setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+        });
+    };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!nombre || !email || !password || !password2) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Todos los campos son obligatorios",
-        });
-        return;
-        }
-
-        if (password !== password2) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Las contraseñas no coinciden",
-        });
-        return;
-        }
-
-        if (password.length < 4) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "La contraseña debe tener al menos 4 caracteres",
-        });
-        return;
-        }
-
         try {
-        register({ nombre, email, password });
+        await authService.register(formData);
 
-        // ✅ Swal de éxito
         Swal.fire({
-            title: "Good job!",
-            text: "Registro exitoso",
+            title: "Registro exitoso",
+            text: "Ahora puedes iniciar sesión con tus credenciales.",
             icon: "success",
         });
 
-        navigate("/", { replace: true });
-        } catch (err) {
-        // ❌ Swal de error (por ejemplo, email ya registrado)
+        navigate("/login");
+        } catch (error) {
+        console.error(error);
         Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: err.message || "Something went wrong!",
+            text: error.message || "Hubo un problema al registrar el usuario.",
         });
         }
     };
 
     return (
-        <div className="row justify-content-center mt-5">
-        <div className="col-md-5">
-            <h1 className="mb-4">Registro</h1>
+        <div className="container py-5 d-flex justify-content-center">
+        <div className="card shadow p-4" style={{ maxWidth: "450px", width: "100%" }}>
+            <h2 className="mb-4 text-center">Registro</h2>
 
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit}>
             <div className="mb-3">
-                <label className="form-label">Nombre completo</label>
+                <label className="form-label">Nombre</label>
                 <input
+                type="text"
+                name="nombre"
                 className="form-control"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                value={formData.nombre}
+                onChange={handleChange}
                 required
                 />
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Correo electrónico</label>
+                <label className="form-label">Correo</label>
                 <input
                 type="email"
+                name="email"
                 className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
                 required
                 />
             </div>
@@ -94,32 +75,18 @@ export const RegisterPage = () => {
                 <label className="form-label">Contraseña</label>
                 <input
                 type="password"
+                name="password"
                 className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
                 required
                 />
             </div>
 
-            <div className="mb-3">
-                <label className="form-label">Repetir contraseña</label>
-                <input
-                type="password"
-                className="form-control"
-                value={password2}
-                onChange={(e) => setPassword2(e.target.value)}
-                required
-                />
-            </div>
-
-            <button type="submit" className="btn btn-success w-100">
-                Crear cuenta
+            <button type="submit" className="btn btn-primary w-100">
+                Registrarme
             </button>
             </form>
-
-            <p className="mt-3 small">
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-            </p>
         </div>
         </div>
     );

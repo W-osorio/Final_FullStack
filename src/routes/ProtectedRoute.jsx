@@ -8,7 +8,7 @@ export const ProtectedRoute = ({ children, roleRequired }) => {
     if (!user) return <Navigate to="/login" replace />;
 
     if (roleRequired && user.role !== roleRequired) {
-        // Podrías redirigir a página 403
+        // para redirigir a pagina 403
         return <Navigate to="/" replace />;
     }
 

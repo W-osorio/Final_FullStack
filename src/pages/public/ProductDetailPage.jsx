@@ -17,10 +17,9 @@ export const ProductDetailPage = () => {
     return <h2>Producto no encontrado</h2>;
   }
 
-  // similares: todos menos el actual
   const similares = products.filter((p) => p.id !== product.id);
 
-  // lógica del carrusel
+  // lógica carrusel
   const [startIndex, setStartIndex] = useState(0);
   const itemsToShow = Math.min(4, similares.length);
   const total = similares.length;
@@ -106,7 +105,7 @@ export const ProductDetailPage = () => {
                 onClick={handleNext}
                 disabled={similares.length <= itemsToShow}
               >
-                →
+
               </button>
             </div>
 

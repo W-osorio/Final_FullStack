@@ -32,7 +32,6 @@ export const AdminProductosList = () => {
               <td>{p.estado}</td>
               <td>${p.precio.toLocaleString("es-CL")}</td>
               <td>
-                {/* Más adelante conectamos estos botones con el backend */}
                 <button className="btn btn-sm btn-outline-primary me-2">
                   Editar
                 </button>

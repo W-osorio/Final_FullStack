@@ -7,7 +7,7 @@ export const NavbarAdmin = () => {
         <div className="container">
 
             <Link className="navbar-brand" to="/admin">
-            Admin MiTienda
+            Admin Level-Up
             </Link>
 
             <button

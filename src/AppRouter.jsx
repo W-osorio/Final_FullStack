@@ -37,7 +37,6 @@ const RequireAdmin = ({ children }) => {
 export const AppRouter = () => {
   return (
     <Routes>
-      {/* Públicas */}
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<HomePage />} />
         <Route path="productos" element={<CatalogPage />} />
@@ -47,7 +46,6 @@ export const AppRouter = () => {
         <Route path="registro" element={<RegisterPage />} />
       </Route>
 
-      {/* Admin protegidas */}
       <Route
         path="/admin"
         element={
@@ -62,7 +60,6 @@ export const AppRouter = () => {
         <Route path="usuarios" element={<AdminUsuariosList />} />
       </Route>
 
-      {/* 404 */}
       <Route
         path="*"
         element={<h1 className="text-center mt-5">404 - Página no encontrada</h1>}

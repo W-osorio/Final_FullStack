@@ -1,36 +1,37 @@
-import { Link, NavLink } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+// src/components/navbar/NavbarPublic.jsx
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export const NavbarPublic = () => {
-  const { totalItems } = useCart();
   const { user, isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+    navigate("/");
   };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand" to="/">
-          Mi Tienda Gamer
+          Tienda Gamer
         </Link>
 
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
+          data-bs-target="#mainNavbar"
         >
-          <span className="navbar-toggler-icon" />
+          <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div id="navbarNav" className="collapse navbar-collapse">
+        <div className="collapse navbar-collapse" id="mainNavbar">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
               <NavLink className="nav-link" to="/">
-                Home
+                Inicio
               </NavLink>
             </li>
             <li className="nav-item">
@@ -38,55 +39,55 @@ export const NavbarPublic = () => {
                 Catálogo
               </NavLink>
             </li>
-
-            {isAdmin && (
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/admin">
-                  Admin
-                </NavLink>
-              </li>
-            )}
-          </ul>
-
-          <ul className="navbar-nav ms-auto align-items-center">
-            <li className="nav-item me-3">
+            <li className="nav-item">
               <NavLink className="nav-link" to="/carrito">
-                Carrito ({totalItems})
+                Carrito
               </NavLink>
             </li>
+          </ul>
 
-            {user ? (
+          <ul className="navbar-nav ms-auto">
+            {!user && (
               <>
-                <li className="nav-item me-2">
-                  <span className="navbar-text text-light small">
-                    Hola, {user.nombre} ({user.rol})
-                  </span>
-                </li>
                 <li className="nav-item">
-                  <button
-                    className="btn btn-outline-light btn-sm"
-                    onClick={handleLogout}
-                  >
-                    Cerrar sesión
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item me-2">
-                  <NavLink
-                    className="btn btn-outline-light btn-sm"
-                    to="/login"
-                  >
-                    Login
+                  <NavLink className="nav-link" to="/login">
+                    Iniciar sesión
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="btn btn-primary btn-sm" to="/registro">
-                    Registro
+                  <NavLink className="nav-link" to="/registro">
+                    Registrarse
                   </NavLink>
                 </li>
               </>
+            )}
+
+            {user && (
+              <li className="nav-item dropdown">
+                <button
+                  className="btn btn-outline-light dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                >
+                  {user.username || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  {isAdmin && (
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={() => navigate("/admin")}
+                      >
+                        Panel admin
+                      </button>
+                    </li>
+                  )}
+                  <li>
+                    <button className="dropdown-item" onClick={handleLogout}>
+                      Cerrar sesión
+                    </button>
+                  </li>
+                </ul>
+              </li>
             )}
           </ul>
         </div>
